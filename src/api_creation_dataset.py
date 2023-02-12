@@ -1,9 +1,7 @@
 import requests  # le paquet pour faire des requêtes HTTP et récupérer des données de sources distantes
-import json  # le paquet pour parser des `json`, format analogue au dictionnaire Python
+import sys  # librarie pour des opérations sur le système d'exploitation
 import os  # le paquet pour construire des chemins de fichiers
-import re
-import sys
-
+import re  # librairie pour les expressions régulières
 
 
 # -------------------------------------------------------------
@@ -22,16 +20,6 @@ import sys
 #   Rondeau du Noyer). licence `Creative Commons Attribution 
 #   4.0 International License`
 # -------------------------------------------------------------
-
-
-
-
-# PROBLÈME: ON MANQUE SÉRIEUSEMENT DE DONNÉES AVEC DES PRIX POUR LES FEMMES
-# => CHANGER DE THÈME ?? URFH
-# POSSIBILITÉ: SUR L'ÉVOLUTION DE LA COURBE DU PRIX D'AUTEURS PAR GENRE AU XVIIIE SIECLE
-# CF: https://fr.wikipedia.org/wiki/Litt%C3%A9rature_fran%C3%A7aise_du_XVIIIe_si%C3%A8cle
-
-
 
 
 def katapi_request(dataset, author_name):
@@ -85,6 +73,9 @@ def katapi_request(dataset, author_name):
         for manuscript_id in response["results"]:
             dataset[manuscript_id] = response["results"][manuscript_id]
         
+        # décommenter le bloc ci dessous pour avoir, pour chaque auteur,
+        # le nombre d'entrées de catalogue qui lui corresponsent, et le
+        # nombre d'entrées de catalogue avec un prix
         # n = 0
         # for v in response["results"].values():
         #     if v["price"] is not None:
@@ -107,7 +98,8 @@ def katapi_request(dataset, author_name):
 def get_katabase_dataset():
     """
     fonction permettant de créer le jeu de données avec lequel
-    on travaillera à partir de l'API Katabase.
+    on travaillera. ce jeu de données est créé à partir de l'API 
+    Katabase.
     
     une API Web, en bref, c'est une application qui permet de 
     récupérer automatiquement des données brutes depuis une source 
@@ -115,52 +107,66 @@ def get_katabase_dataset():
     définie par l'API Katabase; l'API traite cette URL, récupère
     les données pertinentes et renvoie ces données réponse.
     """
-    data_f = {}  # variable dans laquelle on stockera tous les résultats sur les autrices
-    data_m = {}  # variable dans laquelle on stockera tous les résultats sur les auteurs 
-    authors_f = [
-        # les autrices
-        "sand"         # George Sand
-        , "sevigne"    # la marquise de Sévigné
-        , "elssler"    # Fanny Elssler, danseuse de ballet 
-        , "maintenon"  # madame de Maintenon
-        , "pompadour"  # madame de Pompadour
-        , "du barry"   # madame du Barry
-        , "lamballe"   # princesse Lamballe
-        , "montespan"  # madame de Montespan
-        , "josephine"  # impératrice Josephine
-    ]
-    authors_m = [    
-        # les auteurs
-        "la rochefoucauld"
-        , "verdi"
-        , "voltaire"
-        , "delacroix"
-        , "mirabeau"
-        , "musset"
-        , "gericault"
+    # variables contenant nos 4 corpus
+    data_idees = {}
+    data_theatre = {}
+    data_roman = {}
+    data_poeme = {}
+    
+    auteurs_idees = [
+        "voltaire"       # françois-marie arouet, dit voltaire
+        , "montesquieu"  # charles louis de secondat, baron de montesquieu
+        , "rousseau"     # jean-jacques rousseau
+        , "diderot"      # denis diderot
+        , "d'alembert"    # jean le rond d'alembert
     ]
     
-    # on itère sur tou.te.s les auteur.ices pour faire une requête.
+    auteurs_theatre = [
+        "beaumarchais"  # pierre-augustin caron de beaumarchais
+        , "marivaux"    # marivaux, né pierre carlet
+        , "regnard"     # jean-françois regnard
+        , "lesage"      # alain-rené lesage
+        , "sedaine"     # michel-jean sedaine
+    ]
+    
+    auteurs_roman = [
+        "restif de la bretonne"  # nicolas edme restif de la bretonne
+        , "laclos"               # choderlos de laclos
+        , "sade"                 # marquis de sadee
+        , "crebillon"            # claude-prosper joylot de crébillon
+        , "cazotte"              # jacques cazotte
+    ]
+    
+    auteurs_poeme = [
+        "lefranc de pompignan"  # jean-jacques lefranc de pompignan
+        , "gilbert"             # nicolas gilbert
+        , "delille"             # jacques delille
+        , "chenier"             # andré chénier
+        , "parny"               # évariste de parny
+    ]
+    
+    # on itère sur tous les auteurs pour faire une requête.
     # - à chaque itération, on donne à la variable `author` le nom
-    #   d'un.e auteur.ice dans les listes `author_m` et `author_f`.
-    # -  pour chaque `author`, on fait une requête sur ce nom pour récupérer 
+    #   d'un auteur dans les listes `author_*` définies ci-dessus.
+    # -  pour chaque `auteur`, on fait une requête sur ce nom pour récupérer 
     #   tous les manuscrits dont il ou elle est l'auteur.ice. 
-    # - on complète ensuite nos jsons de sortie (`data_m` et `data_f`) avec
+    # - on construit ensuite nos jsons de sortie (`data_idees`...) avec
     #   les résultats obtenus via l'API.
-    for author in authors_f:
-        # d'abord, on s'occupe des autrices et l'on construit `data_f`
-        data_f = katapi_request(data_f, author)
-    for author in authors_m:
-        # ensuite, on s'occupe des auteurs et l'on construit `data_m`
-        data_m = katapi_request(data_m, author)
+    for auteur in auteurs_idees:
+        data_idees = katapi_request(data_idees, auteur)
+    for auteur in auteurs_theatre:
+        data_theatre = katapi_request(data_theatre, auteur)
+    for auteur in auteurs_roman:
+        data_roman = katapi_request(data_roman, auteur)
+    for auteur in auteurs_poeme:
+        data_poeme = katapi_request(data_poeme, auteur)
     
-    return data_f, data_m
-
-
+    return data_idees, data_theatre, data_roman, data_poeme
+    
+    
 def clean_dataset(dataset):
     """
     ici, on traite légèrement les jeux de données en JSON:
-    - on supprime les entrées sans prix
     - on supprime les éléments de description des entrées qui ne
       font pas partie du texte source (à l'exception du prix en 
       francs constants) et qui ne nous serviront pas ensuite
@@ -173,49 +179,52 @@ def clean_dataset(dataset):
     dataset_out = {}  # jeu de données de sortie
     for key, value in dataset.items():
         
-        # on ne traite que les items ayant un prix => les autres ne seront pas retenues
-        if value["price"] is not None:
-            
-            # on supprime les éléments inutiles
-            value.pop("author_wikidata_id", None)  # l'identifiant wikidata
-            value.pop("format", None)  # le format de l'autographe
-            value.pop("term", None)  # un terme normalisé décrivant le type de manuscrit (lettre autographe...)
-            
-            # on supprime à l'aide d'expressions régulières 
-            # (système de détection de motifs dans le texte)
-            # les espaces en trop dans la description.
-            # la fonction `re.sub()` permet d'effectuer les remplacements.
-            # la syntaxe est: `re.sub("motif à remplacer", "remplacement", texte_a_traiter)`
-            #
-            # `\n*\s+` représente zéro à plusieurs sauts de ligne suivis par un
-            # ou plusieurs espaces. on replace par un unique espace, supprimant ainsi
-            # les espaces et sauts de lignes dans la description..
-            value["desc"] = re.sub("\n*\s+", " ", value["desc"])
-            
-            # pour finir, on ajoute à `dataset_out` avec les descriptions d'items nettoyées
-            dataset_out[key] = value
+        # on supprime les éléments inutiles
+        value.pop("author_wikidata_id", None)  # l'identifiant wikidata
+        value.pop("format", None)  # le format de l'autographe
+        value.pop("term", None)  # un terme normalisé décrivant le type de manuscrit (lettre autographe...)
+        
+        # on supprime à l'aide d'expressions régulières 
+        # les espaces en trop dans la description.
+        # (les expressions régulières sont expressions permettant de 
+        # détecter des motifs dans un texte à l'aide d'une grammaire normalisée)
+        # la fonction `re.sub()` permet d'effectuer les remplacements à l'aide
+        # d'expressions régulières.
+        # la syntaxe est: `re.sub("motif à remplacer", "remplacement", texte_a_traiter)`
+        #
+        # `\n*\s+` représente zéro à plusieurs sauts de ligne suivis par un
+        # ou plusieurs espaces. on replace par un unique espace, supprimant ainsi
+        # les espaces et sauts de lignes dans la description..
+        value["desc"] = re.sub("\n*\s+", " ", value["desc"])
+        
+        # pour finir, on ajoute à `dataset_out` avec les descriptions d'items nettoyées
+        dataset_out[key] = value
 
     return dataset_out
     
 
-def make_text(dataset, author_gender):
+def make_text(dataset, genre):
     """
     ici, on construit un fichier en texte brut à partir du JSON récupéré
     par l'API Katabase et on l'enregistre dans un fichier.
     
     :param dataset: le jeu de données à partir duquel produire un texte brut.
-    :param author_gender: le genre des auteur.ices, pour savoir quel jeu de 
-                          données on traite et quel sera le nom du fichier
-                          produit.
+    :param genre: le genre dans lequel les auteurs sont actifs, pour savoir quel 
+                  jeu de données on traite et quel sera le nom du fichier produit.
     """
     text_out = ""  # le texte brut qui sera produit
     
-    # on utilise `.values()` pour itérer seulement sur les valeurs: l'identifiant
-    # des entrées de catalogues ne sera pas utilisé ici.
+    # on utilise `.values()` pour itérer seulement sur les valeurs: 
+    # - `.values()` produit une liste des valeurs d'un dictionnaire,
+    #   c'est-à-dire des éléments à droite dans des entrées de
+    #   dictionnaire
+    # - l'identifiant des entrées de catalogues ne sera pas retenu 
+    #   dans le texte qu'on est en train de construire, donc pas la
+    #   peine d'itérer sur celui-ci.
     for value in dataset.values():
         value_to_string = ""  # la version texte de l'entrée de catalogue
         
-        # on ajoute le nom de l'auteur.ice
+        # on ajoute le nom de l'auteur
         value_to_string = f"{value['author']}\n"
         
         # si il existe une date d'écriture du manuscrit, on l'ajoute
@@ -227,9 +236,10 @@ def make_text(dataset, author_gender):
                            + f"Dimensions: {value['number_of_pages']} pages.\n"\
                            + f"{value['desc']}\n"
         
-        # on ajoute le prix, la monnaie et le prix en francs constants.
-        value_to_string += f"Prix:{value['price']} {value['currency']} "\
-                           + f"(en francs constants 1900: {value['price_c']}).\n"
+        # si il y a un prix, on ajoute le prix, la monnaie et le prix en francs constants.
+        if value["price"] is not None:
+            value_to_string += f"Prix:{value['price']} {value['currency']} "\
+                               + f"(en francs constants 1900: {value['price_c']}).\n"
         
         # enfin, pour signifier la fin d'une entrée, on ajoute 2 sauts de lignes
         # (soit une ligne vide)
@@ -250,21 +260,24 @@ def make_text(dataset, author_gender):
     current_directory = os.path.abspath(os.path.dirname(__file__))
     
     # on crée le chemin de sortie.
-    # `os.path.join()` crée un chemin à partir de noms de dossiers
+    # `os.path.join()` crée un chemin à partir de noms de dossiers ou de fichiers
+    # ici, on crée un chemin depuis le dossier actuel vers le dossier parent, puis
+    # vers le dossier `in/`
     outdir = os.path.join(current_directory, os.pardir, "in")
     
-    # si le dossier de sortie n'existe pas, on le crée pour éviter les erreurs 
+    # si le dossier de sortie n'existe pas, on le créée pour éviter les erreurs 
     # avec `os.makedirs()`
     if not os.path.isdir(outdir):
         os.makedirs(outdir)
     
     # on ouvre le fichier de sortie en écriture
     # `with open() as fh` permet d'ouvrir un fichier indiqué en premier argument de la
-    # fonction `open` et de l'assigner à la vaviable `fh` pour pouvoir y écrire du contenu
+    # fonction `open` et de l'assigner à la variable `fh` pour pouvoir y écrire du contenu
     with open(os.path.join(
-        # ci-dessous, le chemin vers le fichier. il sera nommé `catalogue_f.txt` ou `catalogue_h.txt`
-        outdir, f"catalogue_{author_gender}.txt"),
-        # `mode` permet d'indiquer que le fichier est ouvert en écriture, c'est à dire qu'on va y écrire du contenu
+        # ci-dessous, le chemin vers le fichier: `catalogue_idees.txt`, `catalogue_theatre.txt`...
+        outdir, f"catalogue_{genre}.txt"),
+        # `mode='w+'` permet d'indiquer que le fichier est ouvert en écriture, 
+        # c'est à dire qu'on va y écrire du contenu
         mode="w+" 
     ) as fh:
         fh.write(text_out)  # on y écrit le contenu de `text_out`
@@ -274,12 +287,29 @@ def pipeline():
     """
     fonction décrivant le processus global
     """
+    """
     data_f, data_m = get_katabase_dataset()
     data_f = clean_dataset(data_f)
     data_m = clean_dataset(data_m)
     make_text(data_f, "f")
     make_text(data_m, "m")
+    """
+    # faire les requêtes sur l'api
+    data_idees, data_theatre, data_roman, data_poeme = get_katabase_dataset()
     
+    # nettoyer les jeux de données
+    data_idees = clean_dataset(data_idees)
+    data_theatre = clean_dataset(data_theatre)
+    data_roman = clean_dataset(data_roman)
+    data_poeme = clean_dataset(data_poeme)
+    
+    # transformer les jeux de données `json` en 
+    # fichiers texte et les enregistrer
+    make_text(data_idees, "idees")
+    make_text(data_theatre, "theatre")
+    make_text(data_roman, "roman")
+    make_text(data_poeme, "poeme")
+
 
 if __name__ == "__main__":
     pipeline()
