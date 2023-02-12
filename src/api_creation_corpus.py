@@ -4,7 +4,7 @@ import os  # le paquet pour construire des chemins de fichiers
 import re  # librairie pour les expressions régulières
 
 
-# -------------------------------------------------------------
+# *************************************************************
 # script pour produire le texte utilisé lors de ce cours.
 # processus:
 # - récupérer les données en `json` depuis l'API Katabase
@@ -19,7 +19,7 @@ import re  # librairie pour les expressions régulières
 #   Gille Levenson, Paul Kervegan, Ljudmila Petkovic et Lucie 
 #   Rondeau du Noyer). licence `Creative Commons Attribution 
 #   4.0 International License`
-# -------------------------------------------------------------
+# *************************************************************
 
 
 def katapi_request(dataset, author_name):
@@ -238,7 +238,7 @@ def make_text(dataset, genre):
         
         # si il y a un prix, on ajoute le prix, la monnaie et le prix en francs constants.
         if value["price"] is not None:
-            value_to_string += f"Prix:{value['price']} {value['currency']} "\
+            value_to_string += f"Prix: {value['price']} {value['currency']} "\
                                + f"(en francs constants 1900: {value['price_c']}).\n"
         
         # enfin, pour signifier la fin d'une entrée, on ajoute 2 sauts de lignes
