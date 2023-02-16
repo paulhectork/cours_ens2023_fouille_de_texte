@@ -12,7 +12,13 @@ import re  # librairie pour les expressions régulières
 #   un prix de vente
 # - transformer ce `json` en un texte brut
 # - enregristrer ce texte dans un fichier
-# 
+#
+# petit conseil pour lire le code: aller tout en bas du fichier
+# et commencer par lire la fonction `pipeline()`. c'est elle
+# qui contient la logique globale de ce script. quand cette
+# fonction appelle une autre fonction, aller lire cette 
+# fonction : )
+#
 # crédits: 
 # - code: Paul Kervegan, 2023. code sous licence `GNU GPLv3.0`
 # - données: Katabase (Alexandre Bartz, Simon Gabay, Matthias 
@@ -286,13 +292,6 @@ def make_text(dataset, genre):
 def pipeline():
     """
     fonction décrivant le processus global
-    """
-    """
-    data_f, data_m = get_katabase_dataset()
-    data_f = clean_dataset(data_f)
-    data_m = clean_dataset(data_m)
-    make_text(data_f, "f")
-    make_text(data_m, "m")
     """
     # faire les requêtes sur l'api
     data_idees, data_theatre, data_roman, data_poeme = get_katabase_dataset()

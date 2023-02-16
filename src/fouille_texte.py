@@ -9,6 +9,11 @@ import re  # librairie pour les expressions régulières (détection de motifs d
 # dans ce script, on analyse les corpus de texte produits 
 # avec `api_creation_dataset.py`
 #
+# petit conseil pour lire le code: aller tout en bas du fichier
+# et commencer par lire la fonction `pipeline()`: c'est elle
+# qui décrit la logique globale du script. quand elle appelle
+# une autre fonction, aller lire cette fonction :)
+#
 # crédits: 
 # - code: Paul Kervegan, 2023. code sous licence `GNU GPLv3.0`
 # - données: Katabase (Alexandre Bartz, Simon Gabay, Matthias 
