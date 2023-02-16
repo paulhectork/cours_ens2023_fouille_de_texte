@@ -1,5 +1,7 @@
 # INTRODUCTION À LA FOUILLE DE TEXTE AVEC PYTHON (École normale supérieure ULM, 20 février 2023)
 
+![bannière](./img/banner.png)
+
 Ce cours fait partie du cours d'[*Introduction générale aux humanités numériques*](https://odhn.ens.psl.eu/article/introduction-generale-aux-humanites-numeriques) (ENS ULM, 2022-2023, responsable pédagogique Léa Saint-Raymond). 
 Il vise à introduire aux possibilités d'extraction d'informations et d'analyse statistique depuis
 un corpus de texte brut, en Python. 
