@@ -1,5 +1,6 @@
+import plotly.graph_objects as go  # librairie pour générer des graphiques
 from statistics import median  # fonction pour calculer une valeur médiane
-import plotly  # librairie pour générer des graphiques
+import random  # librairie pour sélectionner des valeurs au hasard
 import os  # la librairie pour gérer les chemins de fichiers
 import re  # librairie pour les expressions régulières (détection de motifs dans le texte)
 
@@ -282,9 +283,39 @@ def axes(corpus):
     for key, value in y_prix.items():
         if len(value) > 0:
             y_prix[key] = median(value)  # si il y a des prix pour cette année, remplacer la liste de prix par le prix médian
+        else:
+            y_prix[key] = 0  # si il n'y a pas eu de vente pour cette année, le prix médian est de 0.
     
     return x, y_prix, y_count
 
+
+def align_y_to_x(x, y_dict):
+    """
+    on aligne nos axes des ordonnées (`y_count...`, `y_prix_...`) sur notre axe des
+    abscisses: actuellement, nos `y` sont des dictionnaires qui associent des années
+    à des valeurs. ils ont tous des bornes chronologiques différentes. l'objectif est
+    donc de transformer ces dictionnaires en listes de valeurs qui contiennent une valeur
+    par année dans `x`. le but est de représenter tous nos `y` alignés à une même ordonnée
+    `x`.
+    pour ce faire, on prend chaque année de `x`; on vérifie si notre `y_dict` contient des 
+    valeurs associées. si oui, on ajoute cette valeur à notre variable de sortie `y_out`,
+    sinon on ajoute un `0`. on a donc en sortie une liste de valeurs alignées sur `x`.
+    
+    :param x: l'axe des abscisses: une liste d'années.
+    :param y_dict: l'axe des ordonnées, représenté ici par un dictionnaire.
+    :returns: y_out, une liste de valeurs alignée sur `x`
+    """
+    y_out = []
+    
+    for annee in x:
+        if annee in y_dict.keys():
+            # si il y a des données pour cette année dans y_dict, on les ajoute
+            y_out.append(y_dict[annee])
+        else:
+            # si il n'y a pas de données, on ajoute un 0
+            y_out.append(0)
+    
+    return y_out
 
 
 def visualize(corpus_idees, corpus_poeme, corpus_roman, corpus_theatre):
@@ -297,12 +328,14 @@ def visualize(corpus_idees, corpus_poeme, corpus_roman, corpus_theatre):
     les visualisations de graphiques sont faites avec la librairie Plotly,
     concurrente de Matplotlib. Matplotlib est surtout orientée pour générer
     des images, alors que Plotly est pensée pour les navigateurs: elle permet
-    de faire des graphiques interactifs. le principe d'un graphique 
-    bidimensionnel avec plotly est relativement simple:
+    de faire des graphiques interactifs.
+    
+    à un niveau abstrait, les librairies de visualisations de données fonctionnent
+    comme ça:
     - un graphique est créé par une fonction
-    - cette fonction prend au moins 2 arguments: des données pour l'axe des
-      abscisses (x), et des données pour l'axe des ordonnées (y). il faut
-      donc donner à plotly 2 listes de données.
+    - on donne à cette fonction:
+      - une liste de données pour les abscisses/x
+      - une ou plusieurs liste(s) de données pour l'axe des ordonnées/y
     - ensuite, il y a énormément de possibilités de personnalisation
     
     :param: en paramètre, tous les corpus exprimés en formats structurés.
@@ -331,11 +364,160 @@ def visualize(corpus_idees, corpus_poeme, corpus_roman, corpus_theatre):
         annees_total.append(annee)
     for annee in x_theatre:
         annees_total.append(annee)
-    
     for i in range(min(annees_total), max(annees_total) + 1):
         x.append(i)
     
+    # ensuite, on finalise la création des axes des y, c'est-à-dire
+    # qu'on transforme toutes nos variables d'ordonnées (`y_prix_...` et
+    # `y_count_...`). ce sont actuellement des dictionnaires, on les transforme
+    # en listes alignées sur l'axe des abscisses `x`
+    y_prix_idees = align_y_to_x(x, y_prix_idees)
+    y_count_idees = align_y_to_x(x, y_count_idees)
     
+    y_prix_poeme = align_y_to_x(x, y_prix_poeme)
+    y_count_poeme = align_y_to_x(x, y_count_poeme)
+    
+    y_prix_theatre = align_y_to_x(x, y_prix_theatre)
+    y_count_theatre = align_y_to_x(x, y_count_theatre)
+    
+    y_prix_roman = align_y_to_x(x, y_prix_roman)
+    y_count_roman = align_y_to_x(x, y_count_roman)
+    
+    
+    # on a maintenant un axe unique pour les abscisses (`x`) et plusieurs 
+    # axes pour les ordonnées/y.
+    # pour plus de clarté, on va créer deux graphiques: 
+    # - l'un qui analyse le prix médian par genre littéraire et par an
+    # - l'autre qui analyse le nombre d'items vendus par genre littéraire
+    #   et par an.
+    
+    # d'abord, définit des couleurs et une mise en page pour nos graphiques. 
+    # celle-ci sera utilisée plus bas.
+    colors = {
+        "white": "#ffffff", "cream": "#fcf8f7", "blue": "#0000ef", 
+        "burgundy": "#890c0c", "pink": "#ff94c9", "gold": "#da9902", 
+        "lightgreen": "#8fc7b1", "darkgreen": "#00553e", "peach": "#ffad98"
+    }
+    layout = {
+        "paper_bgcolor": colors["white"],
+        "plot_bgcolor": colors["cream"],
+        "margin": {"l": 50, "r": 50, "t": 50, "b": 50},
+        "showlegend": True,
+        "xaxis": {"anchor": "x", "title": {"text": r"Année"}},
+        "barmode": "stack"
+    }
+    
+    # d'abord, on crée le graphique sur le prix médian par genre.
+    # d'abord, on crée des représentations graphiques pour les ordonnées. chaque
+    # axe des ordonnées sera représenté par un élément plotly ajouté à la liste `ordonnees`.
+    # pour plus de facilité, on utilise une liste imbriquée contenant toutes
+    # les données nécessaires pour créer notre graphique. cette liste a la structure suivante:
+    # [
+    #     [ "données 1", "titre 1", "couleur 1" ],
+    #     [ "données 2", "titre 2", "couleur 2" ],
+    #     ...
+    # ]
+    corpus = [
+        [ y_prix_idees, "Corpus idées", colors["peach"] ]
+        , [ y_prix_theatre, "Corpus théâtre", colors["lightgreen"] ]
+        , [ y_prix_poeme, "Corpus poèmes", colors["pink"] ]
+        , [ y_prix_roman, "Corpus roman", colors["gold"] ]
+    ]
+    ordonnees = []
+    for axe in corpus:
+        # on ajoute chacun de nos `y_prix_...` à notre liste d'axes `ordonnees`.
+        # la représentation graphique d'un axe des ordonnées est créée par une fonction
+        # `go.Bar` (ou d'autres go... qui crééeront d'autres représentations graphiques)
+        ordonnees.append(
+            go.Bar(
+                x=x,  # valeurs en abscisse
+                y=axe[0],  # valeurs en ordonnées
+                marker={"color": axe[2]},  # couleur
+                name=axe[1]  # titre
+            )
+            # pour un graphique en lignes empilées, commenter le bloc `go.Bar()` ci
+            # dessus et décommenter celui ci-dessous
+            # go.Scatter(
+            #     x=x,  # valeur en abscisse
+            #     y=axe[0],  # valeurs en ordonnées
+            #     fillcolor=axe[2],  # la couleur de remplissage
+            #     stackgroup="one",  # indication qu'il faut empiler les axes
+            #     orientation="v",  # comment empiler les axes
+            #     name=axe[1]  # le nom à donner à chaque axe
+            # )
+        )
+    # ensuite, on met à jour notre mise en page et on la transforme en un objet plotly
+    layout["yaxis"] = {"anchor": "x", "title": {"text": "Prix médian d'un manuscrit"}}
+    layout["title"] = "Prix médian d'un manuscrit, en fonction du genre littéraire pour lequel l'auteur.ice est connu.e, par an"
+    layout = go.Layout(layout)
+    # enfin, on crée notre figure. celle ci prend 2 arguments:
+    # - `data`: les données à afficher.
+    # - `layout`: la manière d'afficher ces données, c'est-à-dire leur mise en page.
+    fig_prix = go.Figure(
+        data=ordonnees,
+        layout=layout
+    )
+    fig_prix.show()
+    
+    # ensuite, on crée le graphique pour le nombre d'items mis en vente par an et par genre.
+    # là encore, il s'agit, à partir d'une liste `corpus` contenant les données
+    # nécessaires (données, titre, couleurs) de créer une liste `ordonnees` avec nos axes
+    # ensuite, on crée un objet `go.Figure()` contenant la figure elle-même.
+    corpus = [
+        [ y_count_idees, "Corpus idées", colors["peach"] ]
+        , [ y_count_theatre, "Corpus théâtre", colors["lightgreen"] ]
+        , [ y_count_poeme, "Corpus poèmes", colors["pink"] ]
+        , [ y_count_roman, "Corpus roman", colors["gold"] ]
+    ]
+    ordonnees = []
+    for axe in corpus:
+        # le processus est exactement le même qu'au dessus: pour chaque `axe`
+        # de notre liste, on crée un objet `go` plotly et on l'ajoute à `ordonnées`.
+        # pour plus de variété, on utilise une autre forme graphique.
+        ordonnees.append(
+            go.Scatter(
+                x=x,  # valeur en abscisse
+                y=axe[0],  # valeurs en ordonnées
+                fillcolor=axe[2],  # la couleur de remplissage
+                stackgroup="one",  # indication qu'il faut empiler les axes
+                orientation="v",  # comment empiler les axes
+                name=axe[1]  # le nom à donner à chaque axe
+            ) 
+            # pour un graphique en barres, commenter le bloc ci-dessus (`go.Scatter`)
+            # et décommenter celui ci-desssous
+            # go.Bar(
+            #   x=x,  # valeurs en abscisse
+            #   y=axe[0],  # valeurs en ordonnées
+            #   marker={"color": axe[2]},  # couleur
+            #   name=axe[1]  # titre
+            # )
+        )
+    # ensuite, on met à jour notre mise en page et on la transforme en un objet plotly
+    layout["yaxis"] = {"anchor": "x", "title": {"text": "Nombre de manuscrits mis en vente"}}
+    layout["title"] = "Nombre de manuscrits mis en vente, en fonction du genre littéraire pour lequel l'auteur.ice est connu.e, par an"
+    layout = go.Layout(layout)
+    # enfin, on crée notre figure.
+    fig_count = go.Figure(
+        data=ordonnees,
+        layout=layout
+    )
+    fig_count.show()
+    
+    # sauvegarder les fichiers
+    current_directory = os.path.abspath(os.path.dirname(__file__))  # le chemin du dossier où se trouve le fichier actuel
+    out_dir = os.path.join(current_directory, os.pardir, "out")  # le chemin du dossier de sortie
+    
+    if not os.path.isdir(out_dir):
+        os.makedirs(out_dir)
+    
+    print(os.path.join(out_dir, "prix_median_par_an.png"))
+    
+    fig_prix.write_image(os.path.join(out_dir, "prix_median_par_an.png"))
+    fig_count.write_image(os.path.join(out_dir, "nombre_items_par_an.png"))
+    
+    return
+
+
 def pipeline():
     """
     fonction décrivant le processus global de traitement
@@ -353,8 +535,11 @@ def pipeline():
     corpus_roman = structure(corpus_roman)
     corpus_theatre = structure(corpus_theatre)
     
-    # créer des visualisations
+    # créer + sauvegarder les visualisations
     visualize(corpus_idees, corpus_poeme, corpus_roman, corpus_theatre)
+    
+    return
+
 
 if __name__ == "__main__":
     pipeline()
