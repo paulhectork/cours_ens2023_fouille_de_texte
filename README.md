@@ -36,7 +36,9 @@ Aucun (c'est pratique!)
 ### En local
 
 Si on ne veut pas / peut pas utiliser `Google Colab`, c'est tout aussi simple dans
-un terminal. 
+un terminal. On peut aussi utiliser des gestionnaires avec une interface graphique.
+Pour tout ce qui a trait à Python (création et utilisation d'environnements virtuels), 
+[Anaconda](https://www.anaconda.com/products/distribution) est très utilisé.
 
 #### Installation de Git
 
