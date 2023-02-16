@@ -50,7 +50,7 @@ winget install --id Git.Git -e --source winget  # si on a windows.
 
 **Si vous utilisez Windows** mais que vous n'avez pas winget, vous pouvez soit
 passer par un gestionnaire de fichiers/d'applications plutôt que par un terminal,
-sinon on installe Winget via (ce lien)[https://docs.microsoft.com/en-us/windows/package-manager/winget].
+sinon on installe Winget via [ce lien](https://docs.microsoft.com/en-us/windows/package-manager/winget).
 
 #### Installation en local
 
@@ -75,7 +75,7 @@ pip install -r requirements.txt
 **Si on veut lancer le code directement**, sans passer par un notebook, en étant à la racine
 du dossier `cours_ens2023_fouille_de_texte`:
 
-``bash
+```bash
 # sourcer l'environnement virtuel
 source env/bin/activate   # linux/macOS
 env\Scripts\activate.bat  # windows. commande alternative: `env\Scripts\Activate.ps1`
