@@ -222,13 +222,6 @@ def structure(corpus):
         corpus_structure.append(entree)
         
     return corpus_structure
-    
-
-def analyze():
-    """
-    ici, on analyse le dictionnaire produit à l'étape précédente
-    (à supprimer / remplacer par visualise??)
-    """
 
 
 def axes(corpus):
