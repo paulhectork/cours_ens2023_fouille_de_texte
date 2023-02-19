@@ -17,7 +17,7 @@ vente de manuscrits ?
 
 ### Prérequis techniques
 
-Aucun (c'est pratique!)
+Aucun (c'est pratique!), même savoir lire du code Python est un petit plus.
 
 ### Compétences vues pendant ce cours
 
@@ -29,7 +29,20 @@ Aucun (c'est pratique!)
   motifs dans le texte (introduction)
 - visualisation de données avec [Plotly](https://plotly.com/python/)
 - *bonus*: utilisation d'APIs pour la récupération de données brutes sur le Web, 
-  introduction aux principes de fonctionnement des API (introduction)
+  introduction aux principes de fonctionnement des API, module `requests` pour
+  faire des requêtes HTTP sur le Web (introduction)
+
+---
+
+## LES NOTEBOOKS
+
+- [0_introduction](./0_introduction.ipynb): présentation générale du programme et des compétences vues
+- [1_fouille_texte](./1_fouille_texte.ipynb): le notebook principal. fouille et visualisation d'un corpus textuel
+- [2_bonus_creation_corpus](./2_bonus_creation_corpus.ipynb): notebook secondaire indiquant comment les corpus utilisés
+  à l'étape 1 ont été créés. Ce notebook introduit à des concepts importants: qu'est ce que c'est qu'une API et
+  comment l'utiliser pour créer un corpus de recherche.
+- [3_ressources_supplementaires](./3_ressources_supplementaires.ipynb): quelques ressources supplémentaires sur
+  Python, les humanités numériques et les expressions régulières.
 
 ---
 
