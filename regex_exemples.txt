@@ -1,0 +1,48 @@
+# cibler les lignes vides
+
+DIDEROT
+Écrit en 1780-01-25. Vendu en 1906.
+Dimensions: 0.75 pages.
+ L. a. s. à l'abbé Gouttes; 25 janvier 1780, 3/4 de p. in-12, léger raccommodage, petite tache d'eau. Très rare
+
+ 
+Diderot
+Écrit en 1759-04-07. Vendu en 1874.
+Dimensions: 0.5 pages.
+ L. a. s. ; Paris, 7 avril 1759, 1/2 p. in-4. 
+
+  
+DIDEROT
+Écrit en 1770-10-15. Vendu en 1865.
+Dimensions: 3.0 pages.
+
+ L. a. (à Grimm) ; 15 oct. 1770, 3 p. pl. in-8. 
+Prix: 12.0 FRF (en francs constants 1900: 12.24).
+          
+  
+DIDEROT
+Écrit en 1781-09-03. Vendu en 1880.
+Dimensions: 0.5 pages.
+ L. a. s. à M. Girbal; 3 sept. 1781, 1/2 p. in-8. 
+Prix: 35.0 FRF (en francs constants 1900: 35.7).
+
+--------------------------------------------------------------------------------
+
+# cibler les chiffres
+
+Pancake
+Moutarde
+1
+3.14
+0 + 1 + 1 + 2 + + 3 + 5 
+
+--------------------------------------------------------------------------------
+
+# cibler prix, monnaie et prix décimaux
+
+Prix: .013 FRF (en francs constants 1900: .4).      # ne pas les prix cibler
+Prix: 18.0 FRF (en francs constants 1900: 18.36).   # cibler
+Prix: 16 FRF (en francs constants 1900: 16.32).     # cibler
+Prix: 20 FRF (en francs constants 1900: 21).        # cibler
+Prix: 0.12 FRF (en francs constants 1900: 0.1224).  # cibler
+

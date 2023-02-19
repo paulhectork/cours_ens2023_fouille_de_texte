@@ -3,3 +3,4 @@ env_ens2023/*
 .project
 .pydevproject
 out/*
+.ipynb_checkpoints
