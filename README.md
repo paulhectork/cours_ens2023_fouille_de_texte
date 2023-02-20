@@ -19,29 +19,11 @@ vente de manuscrits ?
 
 Aucun (c'est pratique!), même savoir lire du code Python est un petit plus.
 
-### Compétences vues pendant ce cours
-
-- manipulation de fichiers: lecture, écriture
-- analyse de texte: structuration et détection de motifs dans du texte brut
-- manipulation des formats de base de Python: chaînes de caractères (`string`),
-  nombres (entiers `int`, décimaux `float`), listes (`list`), dictionnaires (`dict`).
-- expressions régulières (`regex`, pour les intimes) utilisées pour la détection de 
-  motifs dans le texte (introduction)
-- visualisation de données avec [Plotly](https://plotly.com/python/)
-- *bonus*: utilisation d'APIs pour la récupération de données brutes sur le Web, 
-  introduction aux principes de fonctionnement des API, module `requests` pour
-  faire des requêtes HTTP sur le Web (introduction)
-
 ---
 
 ## LES NOTEBOOKS
 
-Ces cours sont disponibles sur Google Colab et en Jupyter notebooks. Je conseille
-fortement d'utiliser jupyter notebook, qui est gratuit, open source, ne repose pas sur le vol des données des
-utilisateur.ice.s, sur lequel Google Colab est basé et, surtout, qui vous permet de motifier le code et 
-de tester des trucs sans danger.  Il faut installer Jupyter Notebook si on veut l'utiliser (j'explique 
-comment plus bas, ce n'est pas bien compliqué).
-
+Ces cours sont disponibles sur Google Colab et en Jupyter notebooks. 
 Il existe une légère différence entre les notebooks Jupyter et ceux sur Google Colab: ceux sur
 Google Collab ne présentent pas l'utilisation de la librairie Python OS.
 
@@ -56,6 +38,11 @@ Google Collab ne présentent pas l'utilisation de la librairie Python OS.
 - [3_ressources_supplementaires](./3_ressources_supplementaires.ipynb): quelques ressources supplémentaires sur
   Python, les humanités numériques et les expressions régulières.
   - sur [Google Colab](https://colab.research.google.com/drive/1DIM-zHq230x6fyZRoKOuYIf3K7udxloB?usp=sharing)
+
+Je conseille fortement d'utiliser jupyter notebook, qui est gratuit, open source, ne repose pas sur le 
+vol des données des utilisateur.ice.s, sur lequel Google Colab est basé et, surtout, qui vous permet 
+de motifier le code, de sauvegarder votre version de tester des trucs sans danger.  Il faut installer 
+Jupyter Notebook si on veut l'utiliser (j'explique comment plus bas, ce n'est pas bien compliqué).
 
 ---
 
@@ -139,6 +126,21 @@ Pour rappel: [notebook 0](https://colab.research.google.com/drive/1HmtwxMbiCQz4w
 Cliquer sur le lien et aller sur le notebook. Pour le notebook 1, il faut télécharger tous les
 fichiers dans `in/` en texte brut et les uploader dans l'onglet `Fichiers` (à gauche de l'écran
 Google Colab), sans les renommer, à la racine du dossier (pas dans des sous-dossiers).
+
+---
+
+## COMPÉTENCES VUES
+
+- manipulation de fichiers: lecture, écriture
+- analyse de texte: structuration et détection de motifs dans du texte brut
+- manipulation des formats de base de Python: chaînes de caractères (`string`),
+  nombres (entiers `int`, décimaux `float`), listes (`list`), dictionnaires (`dict`).
+- expressions régulières (`regex`, pour les intimes) utilisées pour la détection de 
+  motifs dans le texte (introduction)
+- visualisation de données avec [Plotly](https://plotly.com/python/)
+- *bonus*: utilisation d'APIs pour la récupération de données brutes sur le Web, 
+  introduction aux principes de fonctionnement des API, module `requests` pour
+  faire des requêtes HTTP sur le Web (introduction)
 
 ---
 
