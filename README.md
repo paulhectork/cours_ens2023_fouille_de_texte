@@ -37,7 +37,7 @@ Aucun (c'est pratique!), même savoir lire du code Python est un petit plus.
 ## LES NOTEBOOKS
 
 - [0_introduction](./0_introduction.ipynb): présentation générale du programme et des compétences vues
-  - sur [Google Colab](https://colab.research.google.com/drive/1HmtwxMbiCQz4wed-tY57Qf-AI5EpL6Ux?hl=fr)
+  - sur [Google Colab](https://colab.research.google.com/drive/1NHCg4HiTZVZbeZqeSMJthFw6r5TYzqCB?usp=sharing)
 - [1_fouille_texte](./1_fouille_texte.ipynb): le notebook principal. fouille et visualisation d'un corpus textuel
 - [2_bonus_creation_corpus](./2_bonus_creation_corpus.ipynb): notebook secondaire indiquant comment les corpus utilisés
   à l'étape 1 ont été créés. Ce notebook introduit à des concepts importants: qu'est ce que c'est qu'une API et
